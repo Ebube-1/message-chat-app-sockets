@@ -29,9 +29,14 @@ public class Client {
             Scanner scanner = new Scanner(System.in);
             while (socket.isConnected()){
                 String messageToSend = scanner.nextLine();
-                bufferedWriter.write(userName + ": " + messageToSend);
+                bufferedWriter.write(messageToSend);
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
+
+                if(messageToSend.equalsIgnoreCase("exit")){
+                    closeEverything(socket,bufferedReader,bufferedWriter);
+                    break;
+                }
             }
         }catch (IOException e){
             closeEverything(socket, bufferedReader, bufferedWriter);
@@ -46,7 +51,12 @@ public class Client {
                 while (socket.isConnected()){
                     try {
                         messageFromGroupChat = bufferedReader.readLine();
-                        System.out.println(messageFromGroupChat);
+                        if(messageFromGroupChat == null){
+                            closeEverything(socket,bufferedReader,bufferedWriter);
+                            break;
+                        }else {
+                            System.out.println(messageFromGroupChat);
+                        }
                     }catch (IOException e){
                         closeEverything(socket, bufferedReader, bufferedWriter);
                     }
